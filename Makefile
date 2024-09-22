@@ -8,21 +8,35 @@
 
 cc=gcc
 
-all: gc
+all:	gc test
 
-gc: gc.c gc.h
-	$(cc) -O3 -c gc.c -o gc.o
+gc:		gc.c gc.h
+		$(cc) -O3 -c gc.c -o gc.o
 
-gcd: gc.c gc.h
-	$(cc) -O0 -g -DDEBUG -c gc.c -o gcd.o
+gcd:	gc.c gc.h
+		$(cc) -O0 -g -DDEBUG -c gc.c -o gcd.o
+
+test:	gc
+		$(cc) gctest.c gc.o -o test.exe
+
+testd:	gcd
+		rm -f test.exe
+		$(cc) -O0 -g -DDEBUG gctest.c gcd.o -o test.exe
 
 clang:
-	make gc cc=clang
+		make gc cc=clang
 
 clangd:
-	make gcd cc=clang
+		make gcd cc=clang
+
+test-clang:
+		make test cc=clang
+
+test-clangd:
+		make testd cc=clang
 
 clean:
 	rm -f gcd.o
 	rm -f gc.o
+	rm -f test.exe
 

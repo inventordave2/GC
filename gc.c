@@ -3,33 +3,149 @@
 #include <stdlib.h>
 #include "gc.h"
 
-volatile struct GC_* gc;
+static volatile struct GC_* gc;
 static volatile struct GC_* gc_bkp;
 static int z = 0;
+static int _entry = 1;
 
 volatile struct GC_* initGC( int c )	{
 
-	if( z!=0 )
-		if( gc->_!=NULL )
+	if( !_entry )	{
+		
+		if( gc->_!=NULL )	{
+			
 			free( gc->_ );
-
+		}
+		free( (struct GC_*) gc );
+	}
+	
 	gc = build_gc_struct( c );
 
-	if( z==0 )	{
-
-		gc_bkp = gc;
-		z = 1;
+	if( _entry==1 )	{
+		
+		gc_bkp = (volatile struct GC_*)malloc( sizeof(struct GC_) );
+		*gc_bkp = *gc;
+		_entry=0;
 	}
+
+	return (volatile struct GC_*) gc;
+}
+volatile struct GC_* build_gc_struct( int c )	{
+
+	volatile struct GC_* gc = (volatile struct GC_*)malloc( sizeof(volatile struct GC_) );
+
+	gc->_ = (void**)calloc( c,sizeof(void*) );
+
+	if( gc->_ == NULL )
+		c = 0;
+
+	gc->c = c;
+	gc->v = 0;
+	
+	return gc;
+}
+
+volatile struct GC_* getGC()	{
 
 	return gc;
 }
+int setGC( volatile struct GC_* _ )	{
+
+	if( _->_ != NULL )	{
+		
+		gc =  _;
+		return 1;
+	}
+	
+	return 0;
+}
+int freeGC( volatile struct GC_* gc )	{
+	
+	if( gc==NULL )
+		return 0;
+	
+	if( gc->_!=NULL )
+		free( gc->_ );
+	
+	free( (struct GC_*) gc );
+	
+	return 1;
+}
+
 void* g( void* ref )	{
 
-	static int i = 0;
-	gc->_[i++] = ref;
-
+	if( gc->c > gc->v )
+		gc->_[gc->v++] = ref;
+	else	{
+		
+		return NULL;
+	}
+	
+	//--z;
+	
 	return ref;
 }
+
+int gc_status()	{
+
+	return (gc->v < gc->c);
+}
+int reset_gc_ptr( )	{
+
+	if( !_entry )	{
+		*gc = *gc_bkp;
+		return 1;
+	}
+
+	return 0;
+}
+int realloc_gc( volatile struct GC_* gc_, int c2 )	{
+	
+	if( gc_ == NULL )
+		gc_ = gc;
+	
+	int c = gc_->c;
+	
+	if( c2 == c )
+		return 0;
+
+	int t;
+	if ( c2 < c )
+		t = c2;
+	else
+		t = c;
+
+	void** _ = (void**)malloc( sizeof(void*) * c );
+	
+	int i;
+	
+	for( i=0; i < t; i++ )
+		_[i] = gc_->_[i];
+	
+	free( gc_->_ );
+
+	gc_->_ = (void**)malloc( sizeof(void*) * c2 );
+	
+	for( i=0; i < t; i++ )
+		gc_->_[i] = _[i];
+	
+	if( i < c )	{
+	
+		free( _ );
+		return -1;
+	}
+	
+	for( ; i < c2; i++ )
+		gc_->_[i] = (void*)calloc( 1, sizeof(void*) );
+	
+	gc_->c = i;
+	gc_->v = 0;
+	
+	free( _ );
+	
+	return +1;
+}
+
 int cleanUp( )	{
 
 	int i=0, j=0;
@@ -47,28 +163,8 @@ int cleanUp( )	{
 		++i, ++j;
 	}
 
+	free( (struct GC_*) gc );
+	
 	return j;
-}
-
-int reset_gc_ptr()	{
-
-	if( z!=0 )
-		gc = (volatile struct GC_*) gc_bkp;
-
-
-	return (int)z;
-}
-volatile struct GC_* build_gc_struct( int c )	{
-
-	volatile struct GC_* gc;
-
-	gc->_ = (void**)calloc( c,sizeof(void*) );
-
-	if( gc->_ == NULL )
-		c = 0;
-
-	gc->c = c;
-
-	return gc;
 }
 
