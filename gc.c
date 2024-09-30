@@ -86,6 +86,11 @@ void* g( void* ref )	{
 	return ref;
 }
 
+char* gchar( void* ref )	{
+
+	return (char*) g( ref );
+}
+
 int gc_status()	{
 
 	return (gc->v < gc->c);
