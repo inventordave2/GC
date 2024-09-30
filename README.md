@@ -39,9 +39,9 @@
 # Just remember if you ever instantiate your own extra GC data structures to keep track of them...
 # You might, for example, do:
 
-	typedef struct GC_* anotherGC;
+	struct GC_* anotherGC;
 	anotherGC = build_gc_struct( 128 );
-	// if initGC(..) has already been called
+	// if initGC(..) had already been called (even implicitly, at load-time)
 	gc = anotherGC;
 
 	g( malloc(100) );
