@@ -3,12 +3,12 @@
 #include <stdlib.h>
 #include "gc.h"
 
-static volatile struct GC_* gc;
-static volatile struct GC_* gc_bkp;
+static volatile struct GC* gc;
+static volatile struct GC* gc_bkp;
 static int z = 0;
 static int _entry = 1;
 
-volatile struct GC_* initGC( int c )	{
+volatile struct GC* initGC( int c )	{
 
 	if( !_entry )	{
 		
@@ -16,23 +16,23 @@ volatile struct GC_* initGC( int c )	{
 			
 			free( gc->_ );
 		}
-		free( (struct GC_*) gc );
+		free( (struct GC*) gc );
 	}
 	
 	gc = build_gc_struct( c );
 
 	if( _entry==1 )	{
 		
-		gc_bkp = (volatile struct GC_*)malloc( sizeof(struct GC_) );
+		gc_bkp = (volatile struct GC*)malloc( sizeof(struct GC) );
 		*gc_bkp = *gc;
 		_entry=0;
 	}
 
-	return (volatile struct GC_*) gc;
+	return (volatile struct GC*) gc;
 }
-volatile struct GC_* build_gc_struct( int c )	{
+volatile struct GC* build_gc_struct( int c )	{
 
-	volatile struct GC_* gc = (volatile struct GC_*)malloc( sizeof(volatile struct GC_) );
+	volatile struct GC* gc = (volatile struct GC*)malloc( sizeof(volatile struct GC) );
 
 	gc->_ = (void**)calloc( c,sizeof(void*) );
 
@@ -45,11 +45,11 @@ volatile struct GC_* build_gc_struct( int c )	{
 	return gc;
 }
 
-volatile struct GC_* getGC()	{
+volatile struct GC* getGC()	{
 
 	return gc;
 }
-int setGC( volatile struct GC_* _ )	{
+int setGC( volatile struct GC* _ )	{
 
 	if( _->_ != NULL )	{
 		
@@ -59,7 +59,7 @@ int setGC( volatile struct GC_* _ )	{
 	
 	return 0;
 }
-int freeGC( volatile struct GC_* gc )	{
+int freeGC( volatile struct GC* gc )	{
 	
 	if( gc==NULL )
 		return 0;
@@ -67,7 +67,7 @@ int freeGC( volatile struct GC_* gc )	{
 	if( gc->_!=NULL )
 		free( gc->_ );
 	
-	free( (struct GC_*) gc );
+	free( (struct GC*) gc );
 	
 	return 1;
 }
@@ -104,7 +104,7 @@ int reset_gc_ptr( )	{
 
 	return 0;
 }
-int realloc_gc( volatile struct GC_* gc_, int c2 )	{
+int realloc_gc( volatile struct GC* gc_, int c2 )	{
 	
 	if( gc_ == NULL )
 		gc_ = gc;
@@ -137,7 +137,7 @@ int realloc_gc( volatile struct GC_* gc_, int c2 )	{
 	if( i < c )	{
 	
 		free( _ );
-		return -1;
+		return -1; 
 	}
 	
 	for( ; i < c2; i++ )
@@ -168,7 +168,7 @@ int cleanUp( )	{
 		++i, ++j;
 	}
 
-	free( (struct GC_*) gc );
+	free( (struct GC*) gc );
 	
 	return j;
 }
