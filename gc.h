@@ -26,6 +26,9 @@ extern int setGC( volatile struct GC_* );
 // Usage: g( ref )
 extern void* g( void* );
 
+extern char* gchar( void* );
+
+
 // Helper to free any GC contexts you have initialised with fnc:
 // GC_* build_gc_struct(int);
 extern int freeGC( volatile struct GC_* gc );
