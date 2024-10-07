@@ -86,7 +86,7 @@ void* g( void* ref )	{
 	return ref;
 }
 
-char* gchar( void* ref )	{
+char* gcchar( void* ref )	{
 
 	return (char*) g( ref );
 }
