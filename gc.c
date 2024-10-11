@@ -155,17 +155,14 @@ int cleanUp( )	{
 
 	int i=0, j=0;
 
-	while( i<(gc->c) )	{
+	while( i++<(gc->c) )	{
 
-		if( gc->_[i]==NULL )	{
-
-			++i;
+		if( gc->_[i]==NULL )
 			continue;
-		}
 
 		free( gc->_[i] );
 
-		++i, ++j;
+		++j;
 	}
 
 	free( (struct GC*) gc );
