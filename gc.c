@@ -159,7 +159,7 @@ int cleanUp( )	{
 
 		if( gc->_[i]==NULL )	{
 
-			++j;
+			++i;
 			continue;
 		}
 
