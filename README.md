@@ -10,7 +10,7 @@
 # Simplest way:
 
 	// At initialization:
-	volatile struct GC_* myGC = initGC( [int] );
+	volatile struct GC* myGC = initGC( [int] );
 	// The [int] parameter is the MAX number of allocations the GC should provide resources for.
 	// Also, the return struct pointer doesn't need to be captured, but it is a reference to the
 	// GC data structure itself.
@@ -29,9 +29,9 @@
 # However, if you manage your code properly, you can create multiple GC contexts, using the
 # helper functions, such as
 
-	(struct GC_*) build_gc_struct( int );
+	(struct GC*) build_gc_struct( int );
 	getGC();
-	setGC( struct GC_* );
+	setGC( struct GC* );
 	
 	// etc...
 	
@@ -39,7 +39,7 @@
 # Just remember if you ever instantiate your own extra GC data structures to keep track of them...
 # You might, for example, do:
 
-	struct GC_* anotherGC;
+	struct GC* anotherGC;
 	anotherGC = build_gc_struct( 128 );
 	// if initGC(..) had already been called (even implicitly, at load-time)
 	gc = anotherGC;
