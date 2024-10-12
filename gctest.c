@@ -8,7 +8,7 @@
 
 int main( int argc, char** argv )	{
 
-	volatile struct GC_* myGC = initGC( 5 );
+	volatile struct GC* myGC = initGC( 5 );
 	
 	char* _;
 	char c = 'A';
