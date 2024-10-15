@@ -50,7 +50,7 @@ extern void* g( void* );
 
 #define LG g
 
-extern TYPE_REF ** LG##TYPE_REF ( int i );
+extern TYPE_REF * LG##TYPE_REF ( int i );
 
 
 // This char* type-helper almost always
