@@ -26,6 +26,39 @@ extern int setGC( volatile struct GC* );
 // Usage: g( ref )
 extern void* g( void* );
 
+
+// comment out below block when using
+// a specific config
+#ifndef TYPE_REF 
+#define TYPE_REF void
+#endif
+#ifndef TYPE_SIZE 
+#define TYPE_SIZE sizeof( void* )
+#endif
+
+// Example config for temptating custom g() 
+// Helper functions.
+
+#ifndef TYPE_REF 
+#define TYPE_REF struct GC
+#ifdef TYPE_SIZE
+#undef TYPE_SIZE
+#endif
+#define TYPE_SIZE sizeof( struct GC )
+#endif
+
+
+#define LG g
+
+extern TYPE_REF ** LG##TYPE_REF ( int i );
+
+
+// This char* type-helper almost always
+// useful, so available by default.
+// Do not use above TYPE_REF macro
+// with TYPE_REF char, clash problems
+// with named entities.
+
 extern char* gcchar( void* );
 
 
