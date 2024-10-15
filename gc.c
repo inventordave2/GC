@@ -73,13 +73,6 @@ int freeGC( volatile struct GC* gc )	{
 	return 1;
 }
 
-
-TYPE_REF * LG##TYPE_REF ( int i) {
-
- return (TYPE_REF *) g( calloc(TYPE_SIZE,i) );
-}
-
-
 void* g( void* ref )	{
 
 	if( gc->c > gc->v )
