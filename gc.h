@@ -27,31 +27,15 @@ extern int setGC( volatile struct GC* );
 extern void* g( void* );
 
 
-// comment out below block when using
-// a specific config,or put a specific 
-// config after it. There is such an
-// Example after this block.
-#ifndef TYPE_REF 
-#define TYPE_REF void
-#endif
-#ifndef TYPE_SIZE 
-#define TYPE_SIZE sizeof( void* )
-#endif
-// the above default is unique in that
-// void has no size, so sizeof(void) would fail.
-
-
-
 // Example config for temptating custom g() 
 // Helper functions.
 #ifndef TYPE_REF 
-#define TYPE_REF struct GC
+#define TYPE_REF GC
 #ifdef TYPE_SIZE
 #undef TYPE_SIZE
 #endif
 #define TYPE_SIZE sizeof( struct GC )
 #endif
-
 
 #define LG g
 
@@ -68,7 +52,9 @@ extern void* g( void* );
 // without over-running the buffer,
 // you can make use of all the space
 // allocated.
-extern TYPE_REF * LG##TYPE_REF ( int i );
+struct TYPE_REF * LG##TYPE_REF ( int i ) {
+    return (struct TYPE_REF *) g( calloc(TYPE_SIZE,i) );
+}
 
 
 // This char* type-helper almost always
