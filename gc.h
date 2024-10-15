@@ -28,17 +28,22 @@ extern void* g( void* );
 
 
 // comment out below block when using
-// a specific config
+// a specific config,or put a specific 
+// config after it. There is such an
+// Example after this block.
 #ifndef TYPE_REF 
 #define TYPE_REF void
 #endif
 #ifndef TYPE_SIZE 
 #define TYPE_SIZE sizeof( void* )
 #endif
+// the above default is unique in that
+// void has no size, so sizeof(void) would fail.
+
+
 
 // Example config for temptating custom g() 
 // Helper functions.
-
 #ifndef TYPE_REF 
 #define TYPE_REF struct GC
 #ifdef TYPE_SIZE
@@ -50,6 +55,19 @@ extern void* g( void* );
 
 #define LG g
 
+// Typically, the argument value passed
+// for variable 'i' would be 1, as in
+// allocate space for 1 object of the
+// type *in this call*,
+// but as long as you know how many
+// contiguous type-slots (the gc 
+// doesn't have to worry about it,
+// the local OS memory manager tracks
+// the lengths of the buffers it allocated
+// from the Process Heap),
+// without over-running the buffer,
+// you can make use of all the space
+// allocated.
 extern TYPE_REF * LG##TYPE_REF ( int i );
 
 
@@ -58,7 +76,12 @@ extern TYPE_REF * LG##TYPE_REF ( int i );
 // Do not use above TYPE_REF macro
 // with TYPE_REF char, clash problems
 // with named entities.
-
+// with this Helper, specifically, you
+// are expected to have allocated the
+// buffer yourself, so for example:
+//
+// char* _ = gcchar( malloc(1024) );
+// would allocate and return a 1k char buffer.
 extern char* gcchar( void* );
 
 
