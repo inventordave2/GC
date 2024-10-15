@@ -74,9 +74,9 @@ int freeGC( volatile struct GC* gc )	{
 }
 
 
-TYPE_REF ** LG##TYPE_REF ( int i) {
+TYPE_REF * LG##TYPE_REF ( int i) {
 
- return (TYPE_REF **) g( calloc(TYPE_SIZE,i) );
+ return (TYPE_REF *) g( calloc(TYPE_SIZE,i) );
 }
 
 
