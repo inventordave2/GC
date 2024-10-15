@@ -17,7 +17,8 @@ int main( int argc, char** argv )	{
 	for( i=0; i< 5; i++ )	{
 		
 		_ = (char*)g( malloc(11) );
-
+               // alt:
+	       // _ = gcchar( malloc(11) );
 		if( _ == NULL )
 			return 1;
 		
