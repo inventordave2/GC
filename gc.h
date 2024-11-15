@@ -9,7 +9,17 @@ typedef struct GC	{
 	int c;
 	int v;
 
+	int _v_;
+
+	int _delquote_;
+
 } GC;
+
+typedef struct gc_report	{
+
+	int totalDeleted;
+	int v;
+} gc_report;
 
 // The int parameter is a MAX value for the number of ptrs to store. Set a reasonable 
 extern volatile struct GC* initGC( int );
@@ -27,17 +37,6 @@ extern int setGC( volatile struct GC* );
 extern void* g( void* );
 
 
-// This char* type-helper almost always
-// useful, so available by default.
-// Do not use above TYPE_REF macro
-// with TYPE_REF char, clash problems
-// with named entities.
-// with this Helper, specifically, you
-// are expected to have allocated the
-// buffer yourself, so for example:
-//
-// char* _ = gcchar( malloc(1024) );
-// would allocate and return a 1k char buffer.
 extern char* gcchar( void* );
 
 
@@ -45,9 +44,13 @@ extern char* gcchar( void* );
 // GC_* build_gc_struct(int);
 extern int freeGC( volatile struct GC* gc );
 
+// self-explanatory.
+// Searches the Active GC Context.
+int freeRef( void* );
+
 // This only cleans up the Active GC context. If you have made multiple GC data structures, they will need to be
 // freed seperately, using fnc: freeGC(...) 
-extern int cleanUp(void);
+extern gc_report cleanUp(void);
 
 // Returns 1 if there is space left in the Active GC to add a reference. 0 if there is no more space.
 extern int gc_status();
