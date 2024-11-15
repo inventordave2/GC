@@ -42,9 +42,9 @@ int main( int argc, char** argv )	{
 	
 	printf( "\n" );
 	
-	int k = cleanUp();
+	gc_report k = cleanUp();
 	
-	printf( "GC freed %d allocations.\n",  k);
+	printf( "GC freed %d allocations.\n",  k.v );
 	
 	return 0;
 }
