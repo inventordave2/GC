@@ -154,18 +154,6 @@ int realloc_gc( volatile struct GC* gc_, int c2 )	{
 
 int cleanUp( )	{
 
-	int i=0, v = gc->v;
-
-	while( i<(gc->c) )	{
-
-		if( gc->_[i]!=NULL )
-			free( gc->_[i] );
-
-		i++;
-	}
-
-	free( (struct GC*) gc );
-	
-	return v;
+	return freeGC( gc );
 }
 
