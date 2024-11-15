@@ -30,7 +30,7 @@ extern void* g( void* );
 // Example config for temptating custom g() 
 // Helper functions.
 #ifndef TYPE_REF 
-#define TYPE_REF GC
+#define TYPE_REF struct GC
 #ifdef TYPE_SIZE
 #undef TYPE_SIZE
 #endif
@@ -52,8 +52,8 @@ extern void* g( void* );
 // without over-running the buffer,
 // you can make use of all the space
 // allocated.
-struct TYPE_REF * LG##TYPE_REF ( int i ) {
-    return (struct TYPE_REF *) g( calloc(TYPE_SIZE,i) );
+TYPE_REF * LG##TYPE_REF ( int i ) {
+    return (TYPE_REF *) g( calloc(TYPE_SIZE,i) );
 }
 
 
